@@ -75,6 +75,9 @@ bool CDMRCSBK::put(const unsigned char* bytes)
 		m_data[11U] ^= MBC_CRC_MASK[1U];
 		break;
 
+	case DT_MBC_CONTINUATION:
+		break;
+
 	default:
 		LogError("Unknown DMR CSBK data type: 0x%02X", m_dataType);
 		return false;
@@ -94,6 +97,9 @@ bool CDMRCSBK::put(const unsigned char* bytes)
 	case DT_MBC_HEADER:
 		m_data[10U] ^= MBC_CRC_MASK[0U];
 		m_data[11U] ^= MBC_CRC_MASK[1U];
+		break;
+
+	case DT_MBC_CONTINUATION:
 		break;
 
 	default:

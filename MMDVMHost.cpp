@@ -723,11 +723,8 @@ int CMMDVMHost::run()
 
 		// Tier III options
 		if (trunking) {
-			setMode(MODE_DMR);
-
-			m_modem->setDMRTrunkingParams(controlChannel);
 			m_modem->setDMRShortLC(systemCode, controlChannel, registrationRequired);
-
+			setMode(MODE_DMR);
 			if (controlChannel)
 				m_modem->writeDMRAloha(systemCode, registrationRequired, alternateSlot);
 		}
@@ -1575,6 +1572,8 @@ bool CMMDVMHost::createModem()
 	bool debug                   = m_conf.getModemDebug();
 #if defined(USE_DMR)
 	unsigned int colorCode       = m_conf.getDMRColorCode();
+	bool trunking                = m_conf.getDMRTrunkingEnabled();
+	bool controlChannel          = m_conf.getDMRControlChannel();
 #endif
 #if defined(USE_YSF)
 	bool lowDeviation            = m_conf.getFusionLowDeviation();
@@ -1680,6 +1679,8 @@ bool CMMDVMHost::createModem()
 	m_modem->setRFParams(rxFrequency, rxOffset, txFrequency, txOffset, txDCOffset, rxDCOffset, rfLevel, pocsagFrequency);
 #if defined(USE_DMR)
 	m_modem->setDMRParams(colorCode);
+	if(trunking)
+		m_modem->setDMRTrunkingParams(controlChannel);
 #endif
 #if defined(USE_YSF)
 	m_modem->setYSFParams(lowDeviation, ysfTXHang);
