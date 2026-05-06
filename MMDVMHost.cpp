@@ -724,7 +724,9 @@ int CMMDVMHost::run()
 		// Tier III options
 		if (trunking) {
 			m_modem->setDMRShortLC(systemCode, controlChannel, registrationRequired);
+
 			setMode(MODE_DMR);
+
 			if (controlChannel)
 				m_modem->writeDMRAloha(systemCode, registrationRequired, alternateSlot);
 		}
@@ -1679,7 +1681,7 @@ bool CMMDVMHost::createModem()
 	m_modem->setRFParams(rxFrequency, rxOffset, txFrequency, txOffset, txDCOffset, rxDCOffset, rfLevel, pocsagFrequency);
 #if defined(USE_DMR)
 	m_modem->setDMRParams(colorCode);
-	if(trunking)
+	if (trunking)
 		m_modem->setDMRTrunkingParams(controlChannel);
 #endif
 #if defined(USE_YSF)
