@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2011-2018,2020,2021,2023,2025 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2011-2018,2020,2021,2023,2025,2026 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -272,7 +272,6 @@ m_cd(false),
 m_lockout(false),
 m_error(false),
 m_mode(MODE_IDLE),
-m_hwType(HW_TYPE::UNKNOWN),
 #if defined(USE_FM)
 m_fmCallsign(),
 m_fmCallsignSpeed(20U),
@@ -1994,31 +1993,6 @@ bool CModem::readVersion()
 			CThread::sleep(10U);
 			RESP_TYPE_MMDVM resp = getResponse();
 			if ((resp == RESP_TYPE_MMDVM::OK) && (m_buffer[2U] == MMDVM_GET_VERSION)) {
-				if (::memcmp(m_buffer + 4U, "MMDVM ", 6U) == 0)
-					m_hwType = HW_TYPE::MMDVM;
-				else if (::memcmp(m_buffer + 23U, "MMDVM ", 6U) == 0)
-					m_hwType = HW_TYPE::MMDVM;
-				else if (::memcmp(m_buffer + 4U, "DVMEGA", 6U) == 0)
-					m_hwType = HW_TYPE::DVMEGA;
-				else if (::memcmp(m_buffer + 4U, "ZUMspot", 7U) == 0)
-					m_hwType = HW_TYPE::MMDVM_ZUMSPOT;
-				else if (::memcmp(m_buffer + 4U, "MMDVM_HS_Hat", 12U) == 0)
-					m_hwType = HW_TYPE::MMDVM_HS_HAT;
-				else if (::memcmp(m_buffer + 4U, "MMDVM_HS_Dual_Hat", 17U) == 0)
-					m_hwType = HW_TYPE::MMDVM_HS_DUAL_HAT;
-				else if (::memcmp(m_buffer + 4U, "Nano_hotSPOT", 12U) == 0)
-					m_hwType = HW_TYPE::NANO_HOTSPOT;
-				else if (::memcmp(m_buffer + 4U, "Nano_DV", 7U) == 0)
-					m_hwType = HW_TYPE::NANO_DV;
-				else if (::memcmp(m_buffer + 4U, "D2RG_MMDVM_HS", 13U) == 0)
-					m_hwType = HW_TYPE::D2RG_MMDVM_HS;
-				else if (::memcmp(m_buffer + 4U, "MMDVM_HS-", 9U) == 0)
-					m_hwType = HW_TYPE::MMDVM_HS;
-				else if (::memcmp(m_buffer + 4U, "OpenGD77_HS", 11U) == 0)
-					m_hwType = HW_TYPE::OPENGD77_HS;
-				else if (::memcmp(m_buffer + 4U, "SkyBridge", 9U) == 0)
-					m_hwType = HW_TYPE::SKYBRIDGE;
-
 				m_protocolVersion = m_buffer[3U];
 
 				switch (m_protocolVersion) {
@@ -2467,7 +2441,6 @@ bool CModem::setFrequency()
 	assert(m_port != nullptr);
 
 	unsigned char buffer[20U];
-	unsigned char len;
 
 #if defined(USE_POCSAG)
 	unsigned int  pocsagFrequency = 433000000U;
@@ -2475,29 +2448,23 @@ bool CModem::setFrequency()
 		pocsagFrequency = m_pocsagFrequency;
 #endif
 
-	if (m_hwType == HW_TYPE::DVMEGA)
-		len = 12U;
-	else {
-		buffer[12U]  = (unsigned char)(m_rfLevel * 2.55F + 0.5F);
+	buffer[12U]  = (unsigned char)(m_rfLevel * 2.55F + 0.5F);
 
 #if defined(USE_POCSAG)
-		buffer[13U] = (pocsagFrequency >> 0)  & 0xFFU;
-		buffer[14U] = (pocsagFrequency >> 8)  & 0xFFU;
-		buffer[15U] = (pocsagFrequency >> 16) & 0xFFU;
-		buffer[16U] = (pocsagFrequency >> 24) & 0xFFU;
+	buffer[13U] = (pocsagFrequency >> 0)  & 0xFFU;
+	buffer[14U] = (pocsagFrequency >> 8)  & 0xFFU;
+	buffer[15U] = (pocsagFrequency >> 16) & 0xFFU;
+	buffer[16U] = (pocsagFrequency >> 24) & 0xFFU;
 #else
-		buffer[13U] = 0U;
-		buffer[14U] = 0U;
-		buffer[15U] = 0U;
-		buffer[16U] = 0U;
+	buffer[13U] = 0U;
+	buffer[14U] = 0U;
+	buffer[15U] = 0U;
+	buffer[16U] = 0U;
 #endif
-
-		len = 17U;
-	}
 
 	buffer[0U]  = MMDVM_FRAME_START;
 
-	buffer[1U]  = len;
+	buffer[1U]  = 17U;
 
 	buffer[2U]  = MMDVM_SET_FREQ;
 
@@ -2513,10 +2480,10 @@ bool CModem::setFrequency()
 	buffer[10U] = (m_txFrequency >> 16) & 0xFFU;
 	buffer[11U] = (m_txFrequency >> 24) & 0xFFU;
 
-	// CUtils::dump(1U, "Written", buffer, len);
+	// CUtils::dump(1U, "Written", buffer, 17U);
 
-	int ret = m_port->write(buffer, len);
-	if (ret != len)
+	int ret = m_port->write(buffer, 17U);
+	if (ret != 17)
 		return false;
 
 	unsigned int count = 0U;
@@ -2644,11 +2611,6 @@ RESP_TYPE_MMDVM CModem::getResponse()
 	m_state  = SERIAL_STATE::START;
 
 	return RESP_TYPE_MMDVM::OK;
-}
-
-HW_TYPE CModem::getHWType() const
-{
-	return m_hwType;
 }
 
 unsigned char CModem::getMode() const

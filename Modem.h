@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2011-2018,2020,2021,2023,2025 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2011-2018,2020,2021,2023,2025,2026 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -193,8 +193,6 @@ public:
 
 	bool sendCWId(const std::string& callsign);
 
-	HW_TYPE getHWType() const;
-
 	void clock(unsigned int ms);
 
 	void close();
@@ -348,7 +346,6 @@ private:
 	bool                       m_lockout;
 	bool                       m_error;
 	unsigned char              m_mode;
-	HW_TYPE                    m_hwType;
 #if defined(USE_FM)
 	std::string                m_fmCallsign;
 	unsigned int               m_fmCallsignSpeed;

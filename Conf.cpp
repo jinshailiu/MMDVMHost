@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2015-2025 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2015-2026 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ const int BUFFER_SIZE = 500;
 enum class SECTION {
 	NONE,
 	GENERAL,
-	INFO,
 	LOG,
 	MQTT,
 	CWID,
@@ -95,15 +94,6 @@ m_id(0U),
 m_timeout(120U),
 m_duplex(true),
 m_daemon(false),
-m_rxFrequency(0U),
-m_txFrequency(0U),
-m_power(0U),
-m_latitude(0.0F),
-m_longitude(0.0F),
-m_height(0),
-m_location(),
-m_description(),
-m_url(),
 m_logMQTTLevel(0U),
 m_logDisplayLevel(0U),
 m_mqttHost("127.0.0.1"),
@@ -133,6 +123,8 @@ m_modemModemAddress(),
 m_modemModemPort(0U),
 m_modemLocalAddress(),
 m_modemLocalPort(0U),
+m_modemRXFrequency(0U),
+m_modemTXFrequency(0U),
 m_modemRXInvert(false),
 m_modemTXInvert(false),
 m_modemPTTInvert(false),
@@ -385,8 +377,6 @@ bool CConf::read()
 		if (buffer[0U] == '[') {
 			if (::strncmp(buffer, "[General]", 9U) == 0)
 				section = SECTION::GENERAL;
-			else if (::strncmp(buffer, "[Info]", 6U) == 0)
-				section = SECTION::INFO;
 			else if (::strncmp(buffer, "[Log]", 5U) == 0)
 				section = SECTION::LOG;
 			else if (::strncmp(buffer, "[MQTT]", 6U) == 0)
@@ -517,25 +507,6 @@ bool CConf::read()
 				m_dstarNetworkModeHang = m_dmrNetworkModeHang = m_fusionNetworkModeHang = m_p25NetworkModeHang = m_nxdnNetworkModeHang = m_fmNetworkModeHang = (unsigned int)::atoi(value);
 			else if (::strcmp(key, "Daemon") == 0)
 				m_daemon = ::atoi(value) == 1;
-		} else if (section == SECTION::INFO) {
-			if (::strcmp(key, "TXFrequency") == 0)
-				m_pocsagFrequency = m_txFrequency = (unsigned int)::atoi(value);
-			else if (::strcmp(key, "RXFrequency") == 0)
-				m_rxFrequency = (unsigned int)::atoi(value);
-			else if (::strcmp(key, "Power") == 0)
-				m_power = (unsigned int)::atoi(value);
-			else if (::strcmp(key, "Latitude") == 0)
-				m_latitude = float(::atof(value));
-			else if (::strcmp(key, "Longitude") == 0)
-				m_longitude = float(::atof(value));
-			else if (::strcmp(key, "Height") == 0)
-				m_height = ::atoi(value);
-			else if (::strcmp(key, "Location") == 0)
-				m_location = value;
-			else if (::strcmp(key, "Description") == 0)
-				m_description = value;
-			else if (::strcmp(key, "URL") == 0)
-				m_url = value;
 		} else if (section == SECTION::LOG) {
 			if (::strcmp(key, "MQTTLevel") == 0)
 				m_logMQTTLevel = (unsigned int)::atoi(value);
@@ -600,6 +571,10 @@ bool CConf::read()
 				m_modemLocalAddress = value;
 			else if (::strcmp(key, "LocalPort") == 0)
 				m_modemLocalPort = (unsigned short)::atoi(value);
+			else if (::strcmp(key, "TXFrequency") == 0)
+				m_pocsagFrequency = m_modemTXFrequency = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "RXFrequency") == 0)
+				m_modemRXFrequency = (unsigned int)::atoi(value);
 			else if (::strcmp(key, "RXInvert") == 0)
 				m_modemRXInvert = ::atoi(value) == 1;
 			else if (::strcmp(key, "TXInvert") == 0)
@@ -1135,51 +1110,6 @@ bool CConf::getDaemon() const
 	return m_daemon;
 }
 
-unsigned int CConf::getRXFrequency() const
-{
-	return m_rxFrequency;
-}
-
-unsigned int CConf::getTXFrequency() const
-{
-	return m_txFrequency;
-}
-
-unsigned int CConf::getPower() const
-{
-	return m_power;
-}
-
-float CConf::getLatitude() const
-{
-	return m_latitude;
-}
-
-float CConf::getLongitude() const
-{
-	return m_longitude;
-}
-
-int CConf::getHeight() const
-{
-	return m_height;
-}
-
-std::string CConf::getLocation() const
-{
-	return m_location;
-}
-
-std::string CConf::getDescription() const
-{
-	return m_description;
-}
-
-std::string CConf::getURL() const
-{
-	return m_url;
-}
-
 unsigned int CConf::getLogMQTTLevel() const
 {
 	return m_logMQTTLevel;
@@ -1307,6 +1237,16 @@ std::string CConf::getModemLocalAddress() const
 unsigned short CConf::getModemLocalPort() const
 {
 	return m_modemLocalPort;
+}
+
+unsigned int CConf::getModemRXFrequency() const
+{
+	return m_modemRXFrequency;
+}
+
+unsigned int CConf::getModemTXFrequency() const
+{
+	return m_modemTXFrequency;
 }
 
 bool CConf::getModemRXInvert() const
