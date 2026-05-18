@@ -1389,9 +1389,8 @@ void CDStarControl::enable(bool enabled)
 			break;
 
 		default:
-			if (m_rfTimeoutTimer.isRunning()) {
+			if (m_rfTimeoutTimer.isRunning())
 				LogMessage("D-Star, RF user has timed out");
-			}
 			break;
 		}
 		m_rfState = RPT_RF_STATE::LISTENING;
@@ -1404,9 +1403,8 @@ void CDStarControl::enable(bool enabled)
 			break;
 
 		default:
-			if (m_netTimeoutTimer.isRunning()) {
+			if (m_netTimeoutTimer.isRunning())
 				LogMessage("D-Star, network user has timed out");
-			}
 			break;
 		}
 		m_netState = RPT_NET_STATE::IDLE;
@@ -1481,11 +1479,11 @@ void CDStarControl::writeJSONRF(const char* action, const unsigned char* my1, co
 
 	nlohmann::json json;
 
-	json["timestamp"]      = CUtils::createTimestamp();
+	json["timestamp"]    = CUtils::createTimestamp();
 
-	json["source_cs"]      = convertBuffer(my1, DSTAR_LONG_CALLSIGN_LENGTH);
-	json["source_ext"]     = convertBuffer(my2, DSTAR_SHORT_CALLSIGN_LENGTH);
-	json["destination_cs"] = convertBuffer(your, DSTAR_LONG_CALLSIGN_LENGTH);
+	json["src_callsign"] = convertBuffer(my1, DSTAR_LONG_CALLSIGN_LENGTH);
+	json["src_ext"]      = convertBuffer(my2, DSTAR_SHORT_CALLSIGN_LENGTH);
+	json["dst_callsign"] = convertBuffer(your, DSTAR_LONG_CALLSIGN_LENGTH);
 
 	json["source"]    = "rf";
 	json["action"]    = action;
@@ -1532,11 +1530,11 @@ void CDStarControl::writeJSONNet(const char* action, const unsigned char* my1, c
 
 	nlohmann::json json;
 
-	json["timestamp"]      = CUtils::createTimestamp();
+	json["timestamp"]    = CUtils::createTimestamp();
 
-	json["source_cs"]      = convertBuffer(my1, DSTAR_LONG_CALLSIGN_LENGTH);
-	json["source_ext"]     = convertBuffer(my2, DSTAR_SHORT_CALLSIGN_LENGTH);
-	json["destination_cs"] = convertBuffer(your, DSTAR_LONG_CALLSIGN_LENGTH);
+	json["src_callsign"] = convertBuffer(my1, DSTAR_LONG_CALLSIGN_LENGTH);
+	json["src_ext"]      = convertBuffer(my2, DSTAR_SHORT_CALLSIGN_LENGTH);
+	json["dst_callsign"] = convertBuffer(your, DSTAR_LONG_CALLSIGN_LENGTH);
 
 	json["source"] = "network";
 	json["action"] = action;

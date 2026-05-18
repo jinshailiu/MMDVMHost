@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016-2019,2021,2023,2024,2025 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016-2019,2021,2023,2024,2025,2026 by Jonathan Naylor G4KLX
 *   Copyright (C) 2018 by Bryan Biedenkapp <gatekeep@gmail.com> N2PLL
 *
 *   This program is free software; you can redistribute it and/or modify
@@ -1377,15 +1377,14 @@ void CP25Control::writeJSON(nlohmann::json& json, const char* source, const char
 	assert(source != nullptr);
 	assert(action != nullptr);
 
-	json["timestamp"]        = CUtils::createTimestamp();
-	json["source"]           = source;
-	json["action"]           = action;
-	json["source_id"]        = int(srcId);
-	json["destination_id"]   = int(dstId);
-	json["destination_type"] = grp ? "group" : "individual";
+	json["timestamp"] = CUtils::createTimestamp();
+	json["source"]    = source;
+	json["action"]    = action;
+	json["src_id"]    = int(srcId);
+	json["dst_id"]    = int(dstId);
+	json["group"]     = grp ? "yes" : "no";
 
-	json["source_info"] = srcInfo;
+	json["src_info"]  = srcInfo;
 }
 
 #endif
-

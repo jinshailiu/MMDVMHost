@@ -1212,17 +1212,17 @@ std::string CConf::getMQTTName() const
 
 bool CConf::getMQTTAuthEnabled() const
 {
-        return m_mqttAuthEnabled;
+	return m_mqttAuthEnabled;
 }
 
 std::string CConf::getMQTTUsername() const
 {
-        return m_mqttUsername;
+	return m_mqttUsername;
 }
 
 std::string CConf::getMQTTPassword() const
 {
-        return m_mqttPassword;
+	return m_mqttPassword;
 }
 
 bool CConf::getCWIdEnabled() const

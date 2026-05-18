@@ -256,4 +256,3 @@ void CFMControl::writeJSONRSSI(int rssi)
 	WriteJSON("RSSI", json);
 }
 #endif
-

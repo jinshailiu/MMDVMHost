@@ -1,5 +1,5 @@
 /*
- *	Copyright (C) 2015-2021,2023,2025 Jonathan Naylor, G4KLX
+ *	Copyright (C) 2015-2021,2023,2025,2026 Jonathan Naylor, G4KLX
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
@@ -1094,9 +1094,8 @@ void CNXDNControl::enable(bool enabled)
 			break;
 
 		default:
-			if (m_rfTimeoutTimer.isRunning()) {
+			if (m_rfTimeoutTimer.isRunning())
 				LogMessage("NXDN, RF user has timed out");
-			}
 			break;
 		}
 		m_rfState = RPT_RF_STATE::LISTENING;
@@ -1112,9 +1111,8 @@ void CNXDNControl::enable(bool enabled)
 			break;
 
 		default:
-			if (m_netTimeoutTimer.isRunning()) {
+			if (m_netTimeoutTimer.isRunning())
 				LogMessage("NXDN, network user has timed out");
-			}
 			break;
 		}
 		m_netState = RPT_NET_STATE::IDLE;
@@ -1277,15 +1275,14 @@ void CNXDNControl::writeJSON(nlohmann::json& json, const char* source, const cha
 	assert(source != nullptr);
 	assert(action != nullptr);
 
-	json["timestamp"]        = CUtils::createTimestamp();
-	json["source"]           = source;
-	json["action"]           = action;
-	json["source_id"]        = int(srcId);
-	json["destination_id"]   = int(dstId);
-	json["destination_type"] = grp ? "group" : "individual";
+	json["timestamp"] = CUtils::createTimestamp();
+	json["source"]    = source;
+	json["action"]    = action;
+	json["src_id"]    = int(srcId);
+	json["dst_id"]    = int(dstId);
+	json["group"]     = grp ? "yes" : "no";
 
-	json["source_info"] = srcInfo;
+	json["src_info"]  = srcInfo;
 }
 
 #endif
-

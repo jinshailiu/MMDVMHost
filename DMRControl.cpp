@@ -138,4 +138,3 @@ void CDMRControl::enable(bool enabled)
 }
 
 #endif
-
