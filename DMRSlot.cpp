@@ -391,7 +391,7 @@ bool CDMRSlot::writeModem(unsigned char *data, unsigned int len)
 				writeNetworkRF(data, DT_TERMINATOR_WITH_LC);
 
 				if (m_duplex) {
-					for (unsigned int i = 0U; i <= m_hangCount; i++)
+					for (unsigned int i = 0U; i < m_hangCount; i++)
 						writeQueueRF(data);
 				}
 			}
@@ -1063,7 +1063,7 @@ void CDMRSlot::writeEndRF(bool writeEnd)
 			data[0U] = TAG_EOT;
 			data[1U] = 0x00U;
 
-			for (unsigned int i = 0U; i <= m_hangCount; i++)
+			for (unsigned int i = 0U; i < m_hangCount; i++)
 				writeQueueRF(data);
 		}
 	}
@@ -1111,7 +1111,7 @@ void CDMRSlot::writeEndNet(bool writeEnd)
 		data[1U] = 0x00U;
 
 		if (m_duplex) {
-			for (unsigned int i = 0U; i <= m_hangCount; i++)
+			for (unsigned int i = 0U; i < m_hangCount; i++)
 				writeQueueNet(data);
 		} else {
 			for (unsigned int i = 0U; i < 3U; i++)
@@ -1347,7 +1347,7 @@ void CDMRSlot::writeNetwork(const CDMRData& dmrData)
 			data[1U] = 0x00U;
 
 			if (m_duplex) {
-				for (unsigned int i = 0U; i <= m_hangCount; i++)
+				for (unsigned int i = 0U; i < m_hangCount; i++)
 					writeQueueNet(data);
 			} else {
 				for (unsigned int i = 0U; i < 3U; i++)
@@ -2247,7 +2247,7 @@ void CDMRSlot::init(unsigned int colorCode, bool embeddedLCOnly, bool dumpTAData
 	m_network        = network;
 	m_duplex         = duplex;
 	m_lookup         = lookup;
-	m_hangCount      = callHang * 17U;
+	m_hangCount      = (!m_modem->getDMRTrunkingEnabled()) ? callHang * 17U : callHang;
 	m_ovcm           = ovcm;
 	m_protect        = protect;
 
