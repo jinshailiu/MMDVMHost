@@ -1587,8 +1587,8 @@ bool CMMDVMHost::createModem()
 #if defined(USE_NXDN)
 	unsigned int nxdnTXHang      = m_conf.getNXDNTXHang();
 #endif
-	unsigned int rxFrequency     = m_conf.getRXFrequency();
-	unsigned int txFrequency     = m_conf.getTXFrequency();
+	unsigned int rxFrequency     = m_conf.getModemRXFrequency();
+	unsigned int txFrequency     = m_conf.getModemTXFrequency();
 #if defined(USE_POCSAG)
 	unsigned int pocsagFrequency = m_conf.getPOCSAGFrequency();
 #else
@@ -1838,7 +1838,6 @@ bool CMMDVMHost::createDMRNetwork()
 	unsigned int jitter  = m_conf.getDMRNetworkJitter();
 	bool slot1           = m_conf.getDMRNetworkSlot1();
 	bool slot2           = m_conf.getDMRNetworkSlot2();
-	HW_TYPE hwType       = m_modem->getHWType();
 	m_dmrNetModeHang     = m_conf.getDMRNetworkModeHang();
 
 	LogInfo("DMR Network Parameters");
@@ -1851,21 +1850,8 @@ bool CMMDVMHost::createDMRNetwork()
 	LogInfo("    Slot 2: %s", slot2 ? "enabled" : "disabled");
 	LogInfo("    Mode Hang: %us", m_dmrNetModeHang);
 
-	m_dmrNetwork = new CDMRNetwork(gatewayAddress, gatewayPort, localAddress, localPort, id, m_duplex, VERSION, slot1, slot2, hwType, debug);
+	m_dmrNetwork = new CDMRNetwork(gatewayAddress, gatewayPort, localAddress, localPort, id, m_duplex, VERSION, slot1, slot2, debug);
 
-	unsigned int rxFrequency = m_conf.getRXFrequency();
-	unsigned int txFrequency = m_conf.getTXFrequency();
-	unsigned int power       = m_conf.getPower();
-	unsigned int colorCode   = m_conf.getDMRColorCode();
-
-	LogInfo("Info Parameters");
-	LogInfo("    Callsign: %s", m_callsign.c_str());
-	LogInfo("    RX Frequency: %uHz", rxFrequency);
-	LogInfo("    TX Frequency: %uHz", txFrequency);
-	LogInfo("    Power: %uW", power);
-
-	m_dmrNetwork->setConfig(m_callsign, rxFrequency, txFrequency, power, colorCode);
-	
 	bool ret = m_dmrNetwork->open();
 	if (!ret) {
 		delete m_dmrNetwork;

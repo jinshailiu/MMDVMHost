@@ -39,17 +39,6 @@ public:
 	bool         getDuplex() const;
 	bool         getDaemon() const;
 
-	// The Info section
-	unsigned int getRXFrequency() const;
-	unsigned int getTXFrequency() const;
-	unsigned int getPower() const;
-	float        getLatitude() const;
-	float        getLongitude() const;
-	int          getHeight() const;
-	std::string  getLocation() const;
-	std::string  getDescription() const;
-	std::string  getURL() const;
-
 	// The Log section
 	unsigned int getLogMQTTLevel() const;
 	unsigned int getLogDisplayLevel() const;
@@ -90,6 +79,8 @@ public:
 	unsigned short getModemModemPort() const;
 	std::string  getModemLocalAddress() const;
 	unsigned short getModemLocalPort() const;
+	unsigned int getModemRXFrequency() const;
+	unsigned int getModemTXFrequency() const;
 	bool         getModemRXInvert() const;
 	bool         getModemTXInvert() const;
 	bool         getModemPTTInvert() const;
@@ -359,16 +350,6 @@ private:
 	bool         m_duplex;
 	bool         m_daemon;
 
-	unsigned int m_rxFrequency;
-	unsigned int m_txFrequency;
-	unsigned int m_power;
-	float        m_latitude;
-	float        m_longitude;
-	int          m_height;
-	std::string  m_location;
-	std::string  m_description;
-	std::string  m_url;
-
 	unsigned int m_logMQTTLevel;
 	unsigned int m_logDisplayLevel;
 
@@ -403,6 +384,8 @@ private:
 	unsigned short m_modemModemPort;
 	std::string  m_modemLocalAddress;
 	unsigned short m_modemLocalPort;
+	unsigned int m_modemRXFrequency;
+	unsigned int m_modemTXFrequency;
 	bool         m_modemRXInvert;
 	bool         m_modemTXInvert;
 	bool         m_modemPTTInvert;
